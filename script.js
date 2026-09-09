@@ -183,6 +183,7 @@
   }
 
   function buildPlainFlow() {
+    stage.classList.add('js-ready');
     var observer = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
@@ -216,6 +217,12 @@
   var activeMode = null;
 
   function applyMode(mode) {
+    // If GSAP/ScrollTrigger failed to load (CDN blocked/offline), never commit to the
+    // pinned-journey mode — fall back to the always-readable plain-flow layout instead.
+    if (mode === 'pinned-journey' && (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined')) {
+      mode = 'plain-flow';
+    }
+
     if (mode === activeMode) return;
 
     if (activeMode === 'pinned-journey') teardownPinnedJourney();

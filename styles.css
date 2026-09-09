@@ -113,13 +113,16 @@ h1, h2, h3, p, ul {
   transform: none !important;
 }
 
-#stage[data-mode="plain-flow"] .scene__panel {
+/* The fade+translate reveal is opt-in via .js-ready (added only once script.js has actually
+   confirmed it built the plain-flow observer) so that content is always visible by default —
+   with JS disabled, blocked, or erroring out, .scene__panel simply stays at its default opacity: 1. */
+#stage.js-ready[data-mode="plain-flow"] .scene__panel {
   opacity: 0;
   transform: translateY(16px);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-#stage[data-mode="plain-flow"] .scene.is-visible .scene__panel {
+#stage.js-ready[data-mode="plain-flow"] .scene.is-visible .scene__panel {
   opacity: 1;
   transform: translateY(0);
 }
