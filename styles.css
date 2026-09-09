@@ -1,0 +1,320 @@
+/* 한국의 결 — styles.css
+   Tokens reinterpreted from DESIGN.md (dark canvas system) for a nature-tourism editorial page.
+   Font: Inter (open-source) stands in for DESIGN.md's proprietary GT Walsheim, per DESIGN.md's
+   own documented "Note on Font Substitutes". */
+
+:root {
+  --color-canvas: #090909;
+  --color-surface-1: #141414;
+  --color-surface-2: #1c1c1c;
+  --color-ink: #ffffff;
+  --color-ink-muted: #999999;
+  --color-hairline: #262626;
+  --color-hairline-soft: #1a1a1a;
+  --color-accent: #0099ff;
+
+  --font-display: 'Inter Tight', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+
+  --radius-md: 10px;
+  --radius-lg: 15px;
+  --radius-pill: 100px;
+
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 15px;
+  --space-lg: 20px;
+  --space-xl: 30px;
+  --space-xxl: 40px;
+  --space-section: 96px;
+
+  --reading-max-width: 42rem;
+  --body-font-size: 18px;
+  --body-line-height: 1.75;
+
+  color-scheme: dark;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--body-font-size);
+  line-height: var(--body-line-height);
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: var(--color-accent);
+}
+
+button {
+  font-family: inherit;
+}
+
+h1, h2, h3, p, ul {
+  margin: 0;
+}
+
+/* ---------- Stage & Scenes ---------- */
+
+#stage {
+  position: relative;
+}
+
+.scene {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+/* Pinned desktop journey: every scene stacks in the same viewport rect;
+   script.js drives which one is visible via GSAP (opacity/transform only). */
+#stage[data-mode="pinned-journey"] {
+  overflow: hidden;
+}
+
+#stage[data-mode="pinned-journey"] .scene {
+  position: absolute;
+  inset: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+#stage[data-mode="pinned-journey"] .scene__panel {
+  clip-path: inset(6% 0 6% 0);
+}
+
+/* Plain-flow mobile / reduced-motion fallback: normal stacked document */
+#stage[data-mode="plain-flow"] .scene {
+  position: static;
+  opacity: 1;
+  visibility: visible;
+}
+
+#stage[data-mode="plain-flow"] .scene__bg {
+  transform: none !important;
+}
+
+#stage[data-mode="plain-flow"] .scene__panel {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+#stage[data-mode="plain-flow"] .scene.is-visible .scene__panel {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Reduced motion: content is immediately fully visible, no reveal transition at all */
+@media (prefers-reduced-motion: reduce) {
+  #stage[data-mode="plain-flow"] .scene__panel {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+.scene__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.scene__bg-dim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(9,9,9,0.15) 0%, rgba(9,9,9,0.55) 65%, rgba(9,9,9,0.75) 100%);
+  pointer-events: none;
+}
+
+.scene__panel {
+  position: relative;
+  z-index: 2;
+  max-width: var(--reading-max-width);
+  padding: var(--space-xl) var(--space-lg);
+  margin: 0 var(--space-xxl);
+}
+
+.scene__panel--surface {
+  background: rgba(20, 20, 20, 0.55);
+  backdrop-filter: blur(6px);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-hairline);
+}
+
+/* Hero */
+
+.scene--hero .scene__panel {
+  margin-inline: auto;
+  text-align: center;
+  max-width: 44rem;
+}
+
+.scene__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(48px, 7vw, 96px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin-bottom: var(--space-sm);
+}
+
+.scene__title-en {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.25em;
+  color: var(--color-ink-muted);
+  text-transform: uppercase;
+  margin-bottom: var(--space-lg);
+}
+
+.scene__lead {
+  font-size: 19px;
+  line-height: 1.8;
+  color: var(--color-ink);
+}
+
+/* Places */
+
+.scene--place .scene__panel {
+  margin-left: var(--space-xxl);
+}
+
+.scene--place[data-layout="image-right"] .scene__panel {
+  margin-left: auto;
+  margin-right: var(--space-xxl);
+}
+
+.scene--place[data-layout="panel-overlay"] .scene__panel {
+  margin-inline: auto;
+}
+
+.scene__name-en {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.25em;
+  color: var(--color-ink-muted);
+  text-transform: uppercase;
+  margin-bottom: var(--space-xs);
+}
+
+.scene__name-ko {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(32px, 4vw, 52px);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-bottom: var(--space-sm);
+}
+
+.scene__tagline {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--color-ink);
+  margin-bottom: var(--space-lg);
+}
+
+.scene__body {
+  font-size: var(--body-font-size);
+  line-height: var(--body-line-height);
+  color: var(--color-ink);
+  margin-bottom: var(--space-md);
+}
+
+.scene__keywords {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: var(--space-lg);
+}
+
+.scene__keywords li {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+}
+
+/* CTA */
+
+.scene--cta .scene__panel {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.cta__button {
+  margin-top: var(--space-xl);
+  background: var(--color-ink);
+  color: #000;
+  font-weight: 500;
+  font-size: 15px;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 14px 28px;
+  cursor: pointer;
+}
+
+.cta__button:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.cta__button:hover {
+  opacity: 0.9;
+}
+
+/* Footer */
+
+.site-footer {
+  background: var(--color-canvas);
+  color: var(--color-ink-muted);
+  font-size: 13px;
+  text-align: center;
+  padding: var(--space-xl) var(--space-lg);
+  border-top: 1px solid var(--color-hairline-soft);
+}
+
+/* ---------- Responsive: mobile plain-flow floor ---------- */
+
+@media (max-width: 767px) {
+  .scene__panel {
+    margin: 0 var(--space-lg);
+    max-width: 100%;
+  }
+
+  .scene--place[data-layout="image-right"] .scene__panel {
+    margin-right: var(--space-lg);
+  }
+}
