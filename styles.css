@@ -102,9 +102,11 @@ h1, h2, h3, p, ul {
   clip-path: inset(6% 0 6% 0);
 }
 
-/* Plain-flow mobile / reduced-motion fallback: normal stacked document */
+/* Plain-flow mobile / reduced-motion fallback: normal stacked document.
+   NOTE: .scene keeps position: relative (its base rule) here — it must stay a positioned
+   container so its own .scene__bg (position: absolute; inset: 0) fills just that section,
+   not the entire #stage (which is also position: relative and spans every scene). */
 #stage[data-mode="plain-flow"] .scene {
-  position: static;
   opacity: 1;
   visibility: visible;
 }
